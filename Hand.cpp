@@ -1,38 +1,85 @@
 #include "Card.cpp"
+#include <vector>
 
 class Hand
 {
 private:
-    Card c1;
-    Card c2;
+    std::vector<Card> cards;
     int handValue;
 
 public:
     // getters
-    Card getCard1()
+    std::vector<Card> getCards() const 
     {
-        return c1;
+        return cards;
     }
-    Card getCard2()
+
+    int getHandValue() const
     {
-        return c2;
+        return handValue;
     }
 
     // setters
-    void setCard1(Card inCard)
+    void setCards(std::vector<Card> inCards)
     {
-        c1 = inCard;
+        cards = inCards;
     }
-    void setCard2(Card inCard)
+
+    void setHandValue(int inHandValue)
     {
-        c2 = inCard;
+        handValue = inHandValue;
     }
 
     // Constructor
     Hand()
     {
-        c1 = Card();
-        c2 = Card();
-        handValue = c1.getValue() + c2.getValue();
+        cards.push_back(Card());
+        cards.push_back(Card());
+        handValue = cards[0].getValue() + cards[1].getValue();
+    }
+
+    bool hasBlackjack()
+    {
+        if (handValue == 21)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool hasBusted()
+    {
+        if (handValue > 21)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 };
+
+// Operator Overloading
+std::ostream& operator<<(std::ostream& os, Hand h)
+{
+    os << "Hand: ";
+    for (int i = 0; i < h.getCards().size(); i++)
+    {
+        os << h.getCards()[i].getName();
+        os << " ";
+    }
+    os << std::endl;
+
+    int tempHandValue = 0;
+    for (int i = 0; i < h.getCards().size(); i++)
+    {
+        tempHandValue+= h.getCards()[i].getValue();
+    }
+    h.setHandValue(tempHandValue);
+    os << h.getHandValue() << std::endl;
+    return os;
+}
